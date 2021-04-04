@@ -11,15 +11,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 
-class ProductListAPIView(generics.ListAPIView):
-    """
-    Product list API view.
-    """
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
+# class ProductListAPIView(generics.ListAPIView):
+#     """
+#     Product list API view.
+#     """
+#     queryset = Product.objects.all()
+#     serializer_class = ProductSerializer
 
-    def get_serializer_context(self, *args, **kwargs):
-        return {"request":self.request}
+#     def get_serializer_context(self, *args, **kwargs):
+#         return {"request":self.request}
 
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
@@ -33,7 +33,7 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     def get_serializer_context(self, *args, **kwargs):
         return {"request":self.request}
 
-        
+
 class ProductReviewsListAPIView(generics.ListAPIView):
     """
     Product reviews list API view.
