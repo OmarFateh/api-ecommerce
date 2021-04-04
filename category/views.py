@@ -22,3 +22,6 @@ class CategoryDetailAPIView(generics.RetrieveAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = 'id'
+    
+    def get_serializer_context(self, *args, **kwargs):
+        return {"request":self.request}

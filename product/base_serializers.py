@@ -16,15 +16,9 @@ class ProductBaseSerializer(serializers.ModelSerializer):
         fields = ["rate", "reviews_count", "is_in_wishlist"]
         
     def get_rate(self, obj):
-        """
-        Get product's rate.
-        """
         return ProductReview.objects.get_avg_rate(obj.id)
         
     def get_reviews_count(self, obj):
-        """
-        Get product's reviews count.
-        """
         return obj.reviews.count()
 
     def get_is_in_wishlist(self, obj):
@@ -32,11 +26,11 @@ class ProductBaseSerializer(serializers.ModelSerializer):
         Check if the product is in current user's wishlist.
         """
         context = self.context
-        request = context['request']
+        request = context.get('request')
         if request.user.is_authenticated:
             return obj.favourites.filter(id=request.user.id).exists()
         else:
-            return False    
+            return False
 
 
 class ProductSerializer(ProductBaseSerializer):
@@ -48,10 +42,10 @@ class ProductSerializer(ProductBaseSerializer):
 
     class Meta:
         model  = Product
-        fields = ["id", "name", "regular_price", "sale_price", "description", "rate", "reviews_count", 
-            "is_in_wishlist", "thumbnail", "url"
+        fields = ["id", "name", "regular_price", "sale_price", "description", "is_in_wishlist",
+            "thumbnail", "url"
         ]
-
+ 
     # def get_thumbnail(self, obj):
     #     """
     #     Get product's thumbnail.
