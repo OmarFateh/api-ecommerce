@@ -1,6 +1,7 @@
 from accounts.base_serializers import UserSerializer
 from .models import Product, Variation, ProductColor, ProductSize, ProductImage, ProductReview
 from .mixins import TimestampMixin
+from .base_serializers import ProductBaseSerializer
 
 from rest_framework import serializers
 
@@ -47,7 +48,7 @@ class VariationDetailSerializer(serializers.ModelSerializer, TimestampMixin):
         ]
 
 
-class ProductDetailSerializer(serializers.ModelSerializer, TimestampMixin):
+class ProductDetailSerializer(ProductBaseSerializer, TimestampMixin):
     """
     Product detail model serializer.
     """
@@ -56,11 +57,12 @@ class ProductDetailSerializer(serializers.ModelSerializer, TimestampMixin):
 
     class Meta:
         model  = Product
-        fields = ["id", "name", "slug", "description", "details", "regular_price", "sale_price", 
-            "quantity", "variations", "reviews_url", "in_stock", "active", "updated_at", "created_at"
+        fields = ["id", "name", "slug", "description", "details", "regular_price", "sale_price", "rate", 
+            "reviews_count", "quantity", "is_in_wishlist", "variations", "reviews_url", "in_stock", "active",
+            "updated_at", "created_at"
         ]
 
-
+    
 class ProductReviewsListSerializer(serializers.ModelSerializer, TimestampMixin):
     """
     Product reviews list model serializer.

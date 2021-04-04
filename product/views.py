@@ -18,6 +18,9 @@ class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
+    def get_serializer_context(self, *args, **kwargs):
+        return {"request":self.request}
+
 
 class ProductDetailAPIView(generics.RetrieveAPIView):
     """
@@ -27,7 +30,10 @@ class ProductDetailAPIView(generics.RetrieveAPIView):
     serializer_class = ProductDetailSerializer
     lookup_field = 'id'
 
+    def get_serializer_context(self, *args, **kwargs):
+        return {"request":self.request}
 
+        
 class ProductReviewsListAPIView(generics.ListAPIView):
     """
     Product reviews list API view.

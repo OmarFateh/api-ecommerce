@@ -1,13 +1,23 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.db.models import Avg
 from django.core.validators import MaxValueValidator, MinValueValidator
+
+from .utils import Round
+
+
+def product_thumbnail(instance, filename):
+    """
+    Upload the product image into the path and return the uploaded image path.
+    """   
+    return f'products/{instance.name}/{filename}'
 
 def product_image(instance, filename):
     """
     Upload the product image into the path and return the uploaded image path.
     """   
-    return f'products/{instance.variation.product.name}-{instance.variation.color.name}-{instance.variation.size.name}/{filename}'
+    return f'products/{instance.variation.product.name}/{instance.variation.color.name}-{instance.variation.size.name}/{filename}'
 
 
 class BaseTimestamp(models.Model):
@@ -29,6 +39,21 @@ class ProductFavourite(BaseTimestamp):
     product = models.ForeignKey('Product', on_delete=models.CASCADE)
 
 
+class ProductManager(models.Manager):
+    """
+    Product model manager.
+    """
+    def get_descendants_products(self, category, ids=None):
+        """
+        Take category, and get all products of descendants categories of this category.
+        If ids is given, get all products ids of descendants categories of this category.
+        """
+        if ids:
+            return self.get_queryset().filter(category__in=category.get_descendants(include_self=True)).values_list('id', flat=True).distinct()
+        else:
+            return self.get_queryset().filter(category__in=category.get_descendants(include_self=True)) 
+
+    
 class Product(BaseTimestamp):
     """
     Product model.
@@ -40,12 +65,13 @@ class Product(BaseTimestamp):
     regular_price = models.DecimalField(max_digits=10, decimal_places=2)
     sale_price = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     quantity = models.IntegerField()
+    thumbnail = models.ImageField(upload_to=product_thumbnail, null=True)
     category = models.ForeignKey('category.Category', related_name="products", on_delete=models.SET_NULL, null=True)
     favourites = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='wishlist', blank=True, through=ProductFavourite)
     in_stock = models.BooleanField(default=True)
     active = models.BooleanField(default=True)
 
-    # objects = ProductManager()
+    objects = ProductManager()
     class Meta:
         ordering = ['-created_at']
 
@@ -77,6 +103,21 @@ class Product(BaseTimestamp):
     #     return reverse("product:product-detail", kwargs={"product_slug": self.slug})
 
 
+class ProductImageManager(models.Manager):
+    """
+    Product Image model manager. 
+    """
+    def get_product_thumbnail(self, product_id):
+        """
+        Take product's id, and get its first thumbnail.
+        """
+        thumbnails = self.get_queryset().filter(variation__product__id=product_id, thumbnail=True)
+        if thumbnails.exists():
+            return thumbnails.first().image.url
+        else:
+            return self.get_queryset().filter(variation__product__id=product_id).first().image.url
+
+
 class ProductImage(BaseTimestamp):
     """
     Product image model.
@@ -86,7 +127,7 @@ class ProductImage(BaseTimestamp):
     thumbnail = models.BooleanField(default=False)
     active = models.BooleanField(default=True)
     
-    # objects = ProductImageManager()
+    objects = ProductImageManager()
 
     class Meta:
         ordering = ['variation']
@@ -162,6 +203,21 @@ class Variation(BaseTimestamp):
             return self.regular_price        
 
 
+class ProductReviewManager(models.Manager):
+    """
+    Product review model manager.
+    """
+    def get_avg_rate(self, product_id):
+        """
+        Take product's id, and get its avg rate.
+        """
+        product_reviews = self.get_queryset().filter(product__id=product_id)
+        if product_reviews.exists():
+            return int(product_reviews.aggregate(rounded_avg_price=Round(Avg('rate')))['rounded_avg_price'])*20
+        else:
+            return 0
+
+
 class ProductReview(BaseTimestamp):
     """
     Product review model.
@@ -172,6 +228,8 @@ class ProductReview(BaseTimestamp):
     content = models.TextField(blank=True, null=True)
     rate = models.IntegerField(default=0, validators=[MaxValueValidator(5), MinValueValidator(0)])
 
+    objects = ProductReviewManager()
+
     class Meta:
         unique_together = ['product', 'user']
         ordering = ['-created_at']
@@ -180,9 +238,9 @@ class ProductReview(BaseTimestamp):
         # Return Product's name, user's name and his rate.
         return f"{self.product.name} | {self.user.first_name} {self.user.last_name} | {self.rate} stars"
 
-    def get_update_delete_absolute_url(self):
-        # Return absolute url of update and delete review by its id.
-        return reverse('accounts:update-delete-review', kwargs={'review_id': self.pk})
+    # def get_update_delete_absolute_url(self):
+    #     # Return absolute url of update and delete review by its id.
+    #     return reverse('accounts:update-delete-review', kwargs={'review_id': self.pk})
 
     def get_rate_precentage(self):
         # Return review rate precentage.
