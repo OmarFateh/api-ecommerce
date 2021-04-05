@@ -38,12 +38,12 @@ class ProductSerializer(ProductBaseSerializer):
     Product list model serializer.
     """
     thumbnail = serializers.SerializerMethodField()
-    url = serializers.HyperlinkedIdentityField(view_name='product-api:detail', lookup_field='id')
+    # url = serializers.HyperlinkedIdentityField(view_name='product-api:detail', lookup_field='id')
 
     class Meta:
         model  = Product
-        fields = ["id", "name", "regular_price", "sale_price", "description", "is_in_wishlist",
-            "thumbnail", "url"
+        fields = ["id", "name", "slug", "regular_price", "sale_price", "description", "is_in_wishlist",
+            "thumbnail", 
         ]
  
     # def get_thumbnail(self, obj):

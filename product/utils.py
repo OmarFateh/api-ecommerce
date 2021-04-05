@@ -14,7 +14,7 @@ def arabic_slugify(string):
     string = string.replace(")", "")
     string = string.replace("؟", "")
     string = string.replace("!", "")
-    return string
+    return string.lower()
 
 
 def unique_slug_generator(instance, new_slug=None):

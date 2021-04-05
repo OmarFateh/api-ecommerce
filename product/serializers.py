@@ -59,7 +59,7 @@ class ProductDetailSerializer(ProductBaseSerializer, TimestampMixin):
         model  = Product
         fields = ["id", "name", "slug", "description", "details", "regular_price", "sale_price", "rate", 
             "reviews_count", "quantity", "variations", "reviews_url", "in_stock", "active", "is_in_wishlist",
-            "updated_at", "created_at"
+            "updated_at", "created_at",
         ]
 
     
