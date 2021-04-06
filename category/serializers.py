@@ -35,20 +35,10 @@ class CategorySerializer(serializers.ModelSerializer, TimestampMixin):
 # CategorySerializer._declared_fields['children'] = CategorySerializer(many=True)
 
 
-# class ChildrenCategorySerializer(serializers.ModelSerializer, TimestampMixin):
-#     """
-#     """
-#     url = serializers.HyperlinkedIdentityField(view_name='category-api:detail', lookup_field='id')
-#     class Meta:
-#         model  = Category
-#         fields = ["id", "name", "slug", "url"]
-
-
 class CategoryListSerializer(serializers.ModelSerializer):
     """
     Category list model serializer.
     """
-    # url = serializers.HyperlinkedIdentityField(view_name='category-api:detail', lookup_field='id')
     children_categories = serializers.SerializerMethodField()
 
     class Meta:
