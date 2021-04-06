@@ -1,4 +1,4 @@
-# Instagram Clone
+# API Ecommerce
 > An ecommerce API made with django framework and django API rest framework.
 
 ## Table of contents
