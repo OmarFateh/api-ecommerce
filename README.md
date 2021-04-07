@@ -31,5 +31,6 @@ Run the server
 * An authenticated user can purchase a product and add/update/delete a review.
 * A user gets a confirmation email after purchasing a product.
 
+
 ## TODO
 * Implement Product comparison
