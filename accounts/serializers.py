@@ -165,6 +165,7 @@ class PassowordChangeSerializer(serializers.ModelSerializer):
 
 class PasswordResetEmailSerializer(serializers.Serializer):
     """
+    Password reset email serializer.
     """
     email = serializers.EmailField(label='Email Address')
 
@@ -186,6 +187,7 @@ class PasswordResetEmailSerializer(serializers.Serializer):
 
 class PasswordResetSerializer(serializers.Serializer):
     """
+    Password reset serializer.
     """
     new_password1 = serializers.CharField(label='New Password', write_only=True)
     new_password2 = serializers.CharField(label='Confirm New Password', write_only=True)

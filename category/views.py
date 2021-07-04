@@ -1,5 +1,5 @@
 from .models import Category
-from .serializers import CategorySerializer, CategoryListSerializer
+from .serializers import CategorySerializer, CategoryListSerializer, RootCategorySerializer
 
 from rest_framework import generics, mixins, permissions
 
@@ -11,6 +11,18 @@ class CategoryListAPIView(generics.ListAPIView):
     queryset = Category.objects.root_nodes()
     serializer_class = CategoryListSerializer
 
+    def get_serializer_context(self, *args, **kwargs):
+        return {"request":self.request}
+
+
+class RootCategoryListAPIView(generics.RetrieveAPIView):
+    """
+    Root Category list API view.
+    """
+    queryset = Category.objects.root_nodes()
+    serializer_class = RootCategorySerializer
+    lookup_field = 'id'
+    
     def get_serializer_context(self, *args, **kwargs):
         return {"request":self.request}
 
