@@ -14,7 +14,7 @@
 
 ## Setup
 The first thing to do is to clone the repository:  
-`$ git clone https://github.com/OmarFateh/Instagram-Clone.git`  
+`$ git clone https://github.com/OmarFateh/api-ecommerce.git`  
 Setup project environment with virtualenv and pip.  
 `$ virtualenv project-env`  
 Activate the virtual environment  
@@ -30,6 +30,7 @@ Run the server
  * An authenticated user can add product to his a wishlist.
 * An authenticated user can purchase a product and add/update/delete a review.
 * A user gets a confirmation email after purchasing a product.
+
 
 ## TODO
 * Implement Product comparison
