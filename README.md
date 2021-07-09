@@ -27,7 +27,7 @@ Run the server
 ## Features
 * Authentication: Registeration, login, logout, change and reset password.
 * Products are displayed based on their categories and child categories and so on.
- * An authenticated user can add product to his a wishlist.
+ * An authenticated user can add product to his wishlist.
 * An authenticated user can purchase a product and add/update/delete a review.
 * A user gets a confirmation email after purchasing a product.
 
